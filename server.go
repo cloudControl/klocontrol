@@ -64,7 +64,7 @@ func reqHandler(w http.ResponseWriter, r *http.Request) {
 func selectImage(data *sensorData) string {
 	log.Printf("data.Light: %v", data.Light)
 	if data.Light > lightThreshold {
-		return "occupied.jpg"
+		return "toilet_full.svg"
 	}
-	return "vacant.jpg"
+	return "toilet_empty.svg"
 }
