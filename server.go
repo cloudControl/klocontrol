@@ -58,7 +58,7 @@ func reqHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res.Body.Close()
-	fmt.Fprintf(w, "<html><head><meta http-equiv='refresh' content='10'></head><body><img height='100%%' src='/static/%v' /></body></html>", selectImage(&data))
+	fmt.Fprintf(w, "<html><head><meta http-equiv='refresh' content='10'></head><body><center><img height='100%%' src='/static/%v' /></center></body></html>", selectImage(&data))
 }
 
 func selectImage(data *sensorData) string {
