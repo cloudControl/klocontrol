@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -26,33 +24,13 @@ func main() {
 	log.Printf("GOMAXPROCS: %v", runtime.GOMAXPROCS(-1))
 	log.Printf("Port: %v", *httpPort)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
-	http.HandleFunc("/", reqHandler)
+	http.HandleFunc("/", indexHandler)
 
 	log.Fatal(http.ListenAndServe(":"+*httpPort, nil))
 }
 
 type sensorData struct {
 	Light int `json:"result"`
-}
-
-func reqHandler(w http.ResponseWriter, r *http.Request) {
-	res, err := http.Get(sensorUrl)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	data := sensorData{}
-	var body []byte
-	body, err = ioutil.ReadAll(res.Body)
-
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	res.Body.Close()
-	renderTemplate(w, selectImage(&data))
 }
 
 func selectImage(data *sensorData) string {
