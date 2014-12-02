@@ -22,5 +22,5 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res.Body.Close()
-	renderTemplate(w, selectImage(&data))
+	renderTemplate(w, data.SelectImage())
 }
