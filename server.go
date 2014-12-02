@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -30,10 +31,12 @@ func main() {
 }
 
 func selectImage(data *Data) string {
-	log.Printf("data.Light: %v", data.Light)
+	msg := fmt.Sprintf("Light: %d", data.Light)
 	if data.Light > lightThreshold {
+		log.Printf("%s - Occupied", msg)
 		return "toilet_full.svg"
 	}
+	log.Printf("%s - Free", msg)
 	return "toilet_empty.svg"
 }
 
