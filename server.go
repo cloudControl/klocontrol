@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,6 +15,7 @@ import (
 var (
 	sensorUrl      = "https://api.spark.io/v1/devices/53ff69066667574832581667/light?access_token=b77ca0da2879ebfa132bd6e8861c09b4a0adc33f"
 	lightThreshold = 1000
+	templates      = template.Must(template.ParseFiles("templates/index.html"))
 )
 
 func main() {
@@ -58,7 +59,7 @@ func reqHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res.Body.Close()
-	fmt.Fprintf(w, "<html><head><meta http-equiv='refresh' content='10'></head><body><center><img height='100%%' src='/static/%v' /></center></body></html>", selectImage(&data))
+	renderTemplate(w, selectImage(&data))
 }
 
 func selectImage(data *sensorData) string {
@@ -67,4 +68,12 @@ func selectImage(data *sensorData) string {
 		return "toilet_full.svg"
 	}
 	return "toilet_empty.svg"
+}
+
+func renderTemplate(w http.ResponseWriter, image string) {
+	err := templates.Execute(w, image)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
