@@ -14,13 +14,16 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var data Data
-	err = data.Read(res.Body)
+	if err = data.Read(res.Body); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	res.Body.Close()
+
+	err = index.Execute(w, data.SelectImage())
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	res.Body.Close()
-	renderTemplate(w, data.SelectImage())
 }
