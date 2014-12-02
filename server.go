@@ -29,11 +29,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+*httpPort, nil))
 }
 
-type sensorData struct {
-	Light int `json:"result"`
-}
-
-func selectImage(data *sensorData) string {
+func selectImage(data *Data) string {
 	log.Printf("data.Light: %v", data.Light)
 	if data.Light > lightThreshold {
 		return "toilet_full.svg"

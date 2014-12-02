@@ -2,22 +2,21 @@ package main
 
 import (
 	"net/http"
-	"io/ioutil"
-	"encoding/json"
+	"log"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	res, err := http.Get(sensorUrl)
 	if err != nil {
+		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	data := sensorData{}
-	var body []byte
-	body, err = ioutil.ReadAll(res.Body)
 
-	err = json.Unmarshal(body, &data)
+	var data Data
+	err = data.Read(res.Body)
 	if err != nil {
+		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
